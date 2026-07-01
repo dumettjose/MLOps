@@ -1,0 +1,19 @@
+{
+  "metrics": {
+    "random_forest": {
+      "accuracy": 0.79,
+      "precision_macro": 0.7571971207229918,
+      "recall_macro": 0.7479433355170354,
+      "f1_macro": 0.7517148279744917
+    },
+    "logistic_regression": {
+      "accuracy": 0.804,
+      "precision_macro": 0.7724183404341652,
+      "recall_macro": 0.8023308691651945,
+      "f1_macro": 0.7849608154934486
+    }
+  },
+  "errors": {
+    "lightgbm": "No se pudo entrenar lightgbm. En macOS instala libomp: brew install libomp"
+  }
+}

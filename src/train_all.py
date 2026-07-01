@@ -1,9 +1,11 @@
 import argparse
 import copy
 import json
+import shutil
 from pathlib import Path
 
 from .config import load_params
+from .export_mlflow_evidence import export_mlflow_evidence
 from .train import SUPPORTED_MODELS, train_model
 
 
@@ -41,8 +43,16 @@ def main() -> None:
     )
     print(f"\nResumen guardado en {summary_path}")
 
+    evidence_dir = Path("evidence")
+    evidence_dir.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(summary_path, evidence_dir / "model_comparison.json")
+
     if not comparison:
         raise SystemExit("Ningun modelo pudo entrenarse.")
+
+    mlflow_evidence = export_mlflow_evidence(params, output_dir=str(evidence_dir))
+    print(f"Evidencia versionada en {evidence_dir / 'model_comparison.json'}")
+    print(f"Evidencia MLflow en {mlflow_evidence}")
 
     default_type = params["model"]["type"]
     if default_type in comparison:
