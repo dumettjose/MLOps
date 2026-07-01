@@ -1,5 +1,30 @@
 from src.generate_data import build_mock_sessions
-from src.train import TARGET_COLUMN, evaluate, get_feature_columns
+from src.train import TARGET_COLUMN, build_model, evaluate, get_feature_columns
+
+
+def test_supported_classification_models_can_be_built() -> None:
+    import pytest
+
+    base_params = {
+        "random_state": 60,
+        "n_estimators": 10,
+        "max_depth": 4,
+        "max_iter": 200,
+        "learning_rate": 0.1,
+        "class_weight": "balanced",
+    }
+
+    for model_type in ("random_forest", "logistic_regression"):
+        params = {"type": model_type, **base_params}
+        pipeline = build_model(params)
+        assert pipeline is not None
+
+    params = {"type": "lightgbm", **base_params}
+    try:
+        pipeline = build_model(params)
+    except OSError:
+        pytest.skip("LightGBM requiere libomp en macOS: brew install libomp")
+    assert pipeline is not None
 
 
 def test_mock_dataset_has_expected_target() -> None:

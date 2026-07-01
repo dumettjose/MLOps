@@ -5,8 +5,8 @@ stages:
     deps:
     - path: params.yaml
       hash: md5
-      md5: 3e7bd7f4bd80ba664d86f73398afd85f
-      size: 488
+      md5: 7bf3ab449f96d76621731d4a7b0954c4
+      size: 587
     - path: src/config.py
       hash: md5
       md5: 0bf6489b32a1b3c8a5aba1b2fdc8b2cf
@@ -36,8 +36,8 @@ stages:
       size: 101469
     - path: params.yaml
       hash: md5
-      md5: 3e7bd7f4bd80ba664d86f73398afd85f
-      size: 488
+      md5: 7bf3ab449f96d76621731d4a7b0954c4
+      size: 587
     - path: src/config.py
       hash: md5
       md5: 0bf6489b32a1b3c8a5aba1b2fdc8b2cf
@@ -76,22 +76,24 @@ stages:
       size: 161749
     - path: params.yaml
       hash: md5
-      md5: 3e7bd7f4bd80ba664d86f73398afd85f
-      size: 488
+      md5: 7bf3ab449f96d76621731d4a7b0954c4
+      size: 587
     - path: src/config.py
       hash: md5
       md5: 0bf6489b32a1b3c8a5aba1b2fdc8b2cf
       size: 495
     - path: src/train.py
       hash: md5
-      md5: 19bb2fea521a7ff8f0a1563f12350c53
-      size: 6348
+      md5: f66a44fbf5bcd03ed9b820a5bdd12c40
+      size: 8108
     params:
       params.yaml:
         mlflow.experiment_name: engagement_level_classification
         mlflow.tracking_uri: sqlite:///mlflow.db
         model.class_weight: balanced
+        model.learning_rate: 0.1
         model.max_depth: 10
+        model.max_iter: 1000
         model.n_estimators: 200
         model.random_state: 60
         model.type: random_forest

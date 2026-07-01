@@ -45,6 +45,8 @@ stages:
       - model.random_state
       - model.n_estimators
       - model.max_depth
+      - model.max_iter
+      - model.learning_rate
       - model.class_weight
       - mlflow.tracking_uri
       - mlflow.experiment_name

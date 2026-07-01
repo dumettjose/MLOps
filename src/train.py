@@ -21,6 +21,7 @@ from .config import ensure_parent, load_params
 
 
 TARGET_COLUMN = "engagement_level"
+SUPPORTED_MODELS = ("random_forest", "logistic_regression", "lightgbm")
 
 
 def get_feature_columns(data: pd.DataFrame) -> list[str]:
@@ -56,6 +57,20 @@ def build_model(model_params: dict) -> Pipeline:
         )
         return Pipeline(steps=[("classifier", classifier)])
 
+    if model_type == "lightgbm":
+        from lightgbm import LGBMClassifier
+
+        classifier = LGBMClassifier(
+            n_estimators=int(model_params["n_estimators"]),
+            max_depth=int(model_params["max_depth"]),
+            learning_rate=float(model_params.get("learning_rate", 0.1)),
+            random_state=int(model_params["random_state"]),
+            class_weight=class_weight,
+            n_jobs=-1,
+            verbosity=-1,
+        )
+        return Pipeline(steps=[("classifier", classifier)])
+
     raise ValueError(f"Modelo no soportado: {model_type}")
 
 
@@ -75,6 +90,7 @@ def save_confusion_matrix_plot(
     y_true: pd.Series,
     predictions: np.ndarray,
     output_path: str,
+    title: str = "Matriz de confusion",
 ) -> None:
     """Save a confusion matrix heatmap."""
     import matplotlib.pyplot as plt
@@ -85,7 +101,7 @@ def save_confusion_matrix_plot(
 
     plt.figure(figsize=(7, 5))
     plt.imshow(matrix, interpolation="nearest", cmap="Blues")
-    plt.title("Matriz de confusion")
+    plt.title(title)
     plt.colorbar()
     tick_marks = np.arange(len(labels))
     plt.xticks(tick_marks, labels, rotation=45)
@@ -104,16 +120,12 @@ def save_confusion_matrix_plot(
     plt.close()
 
 
-def main() -> None:
+def train_model(params: dict, *, write_dvc_outputs: bool = False) -> dict[str, float]:
+    """Train one classifier and log the run to MLflow."""
     import joblib
     import mlflow
     import mlflow.sklearn
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--params", default="params.yaml")
-    args = parser.parse_args()
-
-    params = load_params(args.params)
     train_data = pd.read_csv(params["data"]["processed_train_path"])
     test_data = pd.read_csv(params["data"]["processed_test_path"])
 
@@ -123,21 +135,22 @@ def main() -> None:
     X_test = test_data[feature_columns]
     y_test = test_data[TARGET_COLUMN]
 
+    model_type = params["model"]["type"]
     pipeline = build_model(params["model"])
     mlflow.set_tracking_uri(params["mlflow"]["tracking_uri"])
     mlflow.set_experiment(params["mlflow"]["experiment_name"])
 
-    with mlflow.start_run(run_name=params["model"]["type"]):
+    with mlflow.start_run(run_name=model_type):
         pipeline.fit(X_train, y_train)
         predictions = pipeline.predict(X_test)
         metrics = evaluate(y_test, predictions)
         report = classification_report(y_test, predictions, zero_division=0)
 
-        model_path = ensure_parent("models/classification_model.joblib")
-        metrics_path = ensure_parent("reports/metrics.json")
-        predictions_path = ensure_parent("reports/predictions.csv")
-        report_path = ensure_parent("reports/classification_report.txt")
-        plot_path = Path("reports/confusion_matrix.png")
+        model_path = ensure_parent(f"models/{model_type}_model.joblib")
+        metrics_path = ensure_parent(f"reports/{model_type}_metrics.json")
+        predictions_path = ensure_parent(f"reports/{model_type}_predictions.csv")
+        report_path = ensure_parent(f"reports/{model_type}_classification_report.txt")
+        plot_path = Path(f"reports/{model_type}_confusion_matrix.png")
 
         joblib.dump(pipeline, model_path)
         metrics_path.write_text(json.dumps(metrics, indent=2), encoding="utf-8")
@@ -145,13 +158,30 @@ def main() -> None:
         pd.DataFrame({"actual": y_test, "prediction": predictions}).to_csv(
             predictions_path, index=False
         )
-        save_confusion_matrix_plot(y_test, predictions, str(plot_path))
+        save_confusion_matrix_plot(
+            y_test,
+            predictions,
+            str(plot_path),
+            title=f"Matriz de confusion - {model_type}",
+        )
+
+        if write_dvc_outputs:
+            ensure_parent("models/classification_model.joblib")
+            joblib.dump(pipeline, "models/classification_model.joblib")
+            Path("reports/metrics.json").write_text(json.dumps(metrics, indent=2), encoding="utf-8")
+            pd.DataFrame({"actual": y_test, "prediction": predictions}).to_csv(
+                "reports/predictions.csv", index=False
+            )
+            save_confusion_matrix_plot(y_test, predictions, "reports/confusion_matrix.png")
+            Path("reports/classification_report.txt").write_text(report, encoding="utf-8")
 
         mlflow.log_params(
             {
-                "model_type": params["model"]["type"],
+                "model_type": model_type,
                 "n_estimators": params["model"].get("n_estimators"),
                 "max_depth": params["model"].get("max_depth"),
+                "max_iter": params["model"].get("max_iter"),
+                "learning_rate": params["model"].get("learning_rate"),
                 "class_weight": params["model"].get("class_weight"),
                 "model_random_state": params["model"].get("random_state"),
                 "data_random_state": params["data"]["random_state"],
@@ -171,7 +201,17 @@ def main() -> None:
             serialization_format=mlflow.sklearn.SERIALIZATION_FORMAT_PICKLE,
         )
 
-    print(f"Metricas guardadas en {metrics_path}: {metrics}")
+    return metrics
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--params", default="params.yaml")
+    args = parser.parse_args()
+
+    params = load_params(args.params)
+    metrics = train_model(params, write_dvc_outputs=True)
+    print(f"Metricas guardadas para {params['model']['type']}: {metrics}")
 
 
 if __name__ == "__main__":
