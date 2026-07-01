@@ -13,8 +13,7 @@ split:
   stratify: true
 
 model:
-  # Opciones: random_forest | logistic_regression | lightgbm
-  type: random_forest
+  # Hiperparametros compartidos por los 3 modelos (el pipeline entrena todos automaticamente).
   random_state: 60
   n_estimators: 200
   max_depth: 10

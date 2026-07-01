@@ -54,13 +54,13 @@ def main() -> None:
     print(f"Evidencia versionada en {evidence_dir / 'model_comparison.json'}")
     print(f"Evidencia MLflow en {mlflow_evidence}")
 
-    default_type = params["model"]["type"]
-    if default_type in comparison:
-        print(f"\n=== Actualizando artefactos DVC con {default_type} ===")
-        train_model(params, write_dvc_outputs=True)
-
     best_model = max(comparison, key=lambda name: comparison[name]["f1_macro"])
     print(f"Mejor f1_macro: {best_model} ({comparison[best_model]['f1_macro']:.4f})")
+
+    print(f"\n=== Actualizando artefactos DVC con {best_model} (mejor f1_macro) ===")
+    best_params = copy.deepcopy(params)
+    best_params["model"]["type"] = best_model
+    train_model(best_params, write_dvc_outputs=True)
 
 
 if __name__ == "__main__":

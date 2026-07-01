@@ -5,8 +5,8 @@ stages:
     deps:
     - path: params.yaml
       hash: md5
-      md5: 7bf3ab449f96d76621731d4a7b0954c4
-      size: 587
+      md5: 14866910406caa230767442db05f8bf1
+      size: 599
     - path: src/config.py
       hash: md5
       md5: 0bf6489b32a1b3c8a5aba1b2fdc8b2cf
@@ -36,8 +36,8 @@ stages:
       size: 101469
     - path: params.yaml
       hash: md5
-      md5: 7bf3ab449f96d76621731d4a7b0954c4
-      size: 587
+      md5: 14866910406caa230767442db05f8bf1
+      size: 599
     - path: src/config.py
       hash: md5
       md5: 0bf6489b32a1b3c8a5aba1b2fdc8b2cf
@@ -64,7 +64,7 @@ stages:
       md5: 824534065694bcd07ce110729ca4623c
       size: 161749
   train_model:
-    cmd: python -m src.train --params params.yaml
+    cmd: python -m src.train_all --params params.yaml
     deps:
     - path: data/processed/test.csv
       hash: md5
@@ -76,16 +76,24 @@ stages:
       size: 161749
     - path: params.yaml
       hash: md5
-      md5: 7bf3ab449f96d76621731d4a7b0954c4
-      size: 587
+      md5: 14866910406caa230767442db05f8bf1
+      size: 599
     - path: src/config.py
       hash: md5
       md5: 0bf6489b32a1b3c8a5aba1b2fdc8b2cf
       size: 495
+    - path: src/export_mlflow_evidence.py
+      hash: md5
+      md5: a5016f6895a703aa4455237827ee5ac0
+      size: 2168
     - path: src/train.py
       hash: md5
       md5: f66a44fbf5bcd03ed9b820a5bdd12c40
       size: 8108
+    - path: src/train_all.py
+      hash: md5
+      md5: 980e2e6ca9d2b20b45950ec430879922
+      size: 2390
     params:
       params.yaml:
         mlflow.experiment_name: engagement_level_classification
@@ -96,25 +104,24 @@ stages:
         model.max_iter: 1000
         model.n_estimators: 200
         model.random_state: 60
-        model.type: random_forest
     outs:
     - path: models/classification_model.joblib
       hash: md5
-      md5: 28e0422c90b29add33f5343ff08792b9
-      size: 8741690
+      md5: 86fb8e3d7cbe25f3b1162c97df71f9d5
+      size: 3137
     - path: reports/classification_report.txt
       hash: md5
-      md5: 587847368d215f8bef54b2d8bdd4bfb3
+      md5: 91001a96457bc2177282e7d65807c168
       size: 380
     - path: reports/confusion_matrix.png
       hash: md5
-      md5: 1a07125b8e936466ececcfef8a91f4cb
-      size: 29805
+      md5: 33e6b8d2d3ee6ea97ef06998a2fa2e08
+      size: 32577
     - path: reports/metrics.json
       hash: md5
-      md5: 6a86801c337a890dc1747a0314679465
-      size: 135
+      md5: 3563d9a646ff346f8d349f9bffda5bc5
+      size: 136
     - path: reports/predictions.csv
       hash: md5
-      md5: c4dda4f6e274d348e0a63e54b15871f0
-      size: 5111
+      md5: 515fcd61db288288b545f87834844fd0
+      size: 5120

@@ -33,15 +33,16 @@ stages:
       - data/processed/test.csv
 
   train_model:
-    cmd: python -m src.train --params params.yaml
+    cmd: python -m src.train_all --params params.yaml
     deps:
       - src/train.py
+      - src/train_all.py
+      - src/export_mlflow_evidence.py
       - src/config.py
       - data/processed/train.csv
       - data/processed/test.csv
       - params.yaml
     params:
-      - model.type
       - model.random_state
       - model.n_estimators
       - model.max_depth

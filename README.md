@@ -50,7 +50,8 @@ poetry run mlflow ui --backend-store-uri sqlite:///mlflow.db
 Notas:
 
 - `dvc pull` recupera datos versionados desde el remoto DVC (`./dvc_remote`). Si es la primera ejecucion y aun no hay datos en el remoto, continua con `dvc repro`.
-- El entrenamiento usa el modulo `src.train` porque el codigo esta organizado como paquete Python en `src/`.
+- `dvc repro` entrena **automaticamente los 3 modelos** (`random_forest`, `logistic_regression`, `lightgbm`) y actualiza `evidence/`.
+- El comando `src.train` sirve para depurar un solo modelo; el flujo oficial usa `train_all` via DVC.
 - Abre MLflow en http://127.0.0.1:5000
 
 Verifica la instalacion:
@@ -100,47 +101,48 @@ Etapas:
 
 1. `generate_data` → `data/raw/session_data.csv`
 2. `prepare_data` → `data/processed/train.csv`, `data/processed/test.csv`
-3. `train_model` → modelo, metricas y reportes
+3. `train_model` → entrena **los 3 modelos**, registra MLflow y genera evidencias en `evidence/`
 
-Los datos y artefactos pesados no van en Git; DVC los versiona mediante `dvc.lock`.
+Al finalizar `dvc repro` se actualizan automaticamente en disco:
+
+- `evidence/model_comparison.json` — metricas de los 3 modelos
+- `evidence/mlflow_runs.json` — resumen de experimentos MLflow
+- `models/classification_model.joblib` — mejor modelo segun `f1_macro`
+
+Estos archivos en `evidence/` se versionan en Git para la entrega del proyecto.
 
 ## Modelos de clasificacion
 
-El proyecto entrena y compara **tres clasificadores**:
+El pipeline entrena **automaticamente tres clasificadores** en cada `dvc repro`:
 
-| `model.type` | Algoritmo |
-|--------------|-----------|
+| Modelo | Algoritmo |
+|--------|-----------|
 | `random_forest` | RandomForestClassifier |
 | `logistic_regression` | LogisticRegression |
 | `lightgbm` | LGBMClassifier |
 
-### Entrenar y comparar los modelos
+No es necesario cambiar `params.yaml` entre modelos: `train_all.py` los ejecuta en secuencia.
 
-```bash
-python -m poetry run python -m src.generate_data --params params.yaml
-python -m poetry run python -m src.prepare_data --params params.yaml
-python -m poetry run python -m src.train_all --params params.yaml
-```
-
-Esto registra experimentos en MLflow y genera evidencias en `evidence/`:
+Evidencias generadas en `evidence/`:
 
 - `evidence/model_comparison.json` — metricas por modelo
 - `evidence/mlflow_runs.json` — resumen de runs MLflow
 
-### Cambiar el modelo por defecto del pipeline DVC
+### Entrenamiento manual (opcional)
 
-Edita `params.yaml`:
-
-```yaml
-model:
-  type: random_forest   # random_forest | logistic_regression | lightgbm
-```
-
-Luego ejecuta:
+Si quieres repetir solo la etapa de modelos sin DVC:
 
 ```bash
-python -m poetry run dvc repro
+python -m poetry run python -m src.train_all --params params.yaml
 ```
+
+### Depurar un solo modelo
+
+```bash
+python -m poetry run python -m src.train --params params.yaml
+```
+
+En ese caso define temporalmente `model.type` en `params.yaml` (`random_forest`, `logistic_regression` o `lightgbm`).
 
 ## MLflow
 
