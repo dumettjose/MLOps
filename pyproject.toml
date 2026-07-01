@@ -1,10 +1,11 @@
 [project]
 name = "proyecto-git"
 version = "0.1.0"
-description = ""
+description = "Pipeline MLOps de clasificacion de engagement_level."
 authors = [
-    {name = "Luis Jimenez",email = "luisanto_3112@hotmail.es"}
+    {name = "Luis Jimenez", email = "luisanto_3112@hotmail.es"}
 ]
+readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
     "pandas (==2.3.3)",
