@@ -1,0 +1,118 @@
+schema: '2.0'
+stages:
+  generate_data:
+    cmd: python -m src.generate_data --params params.yaml
+    deps:
+    - path: params.yaml
+      hash: md5
+      md5: 39e940ff6ba35188b567111463a3b617
+      size: 487
+    - path: src/config.py
+      hash: md5
+      md5: 0bf6489b32a1b3c8a5aba1b2fdc8b2cf
+      size: 495
+    - path: src/generate_data.py
+      hash: md5
+      md5: d21e7c3e059f0e82b9cdbc37a5fd6abe
+      size: 5839
+    params:
+      params.yaml:
+        data.label_noise: 0.04
+        data.n_samples: 2000
+        data.random_state: 60
+        data.raw_path: data/raw/session_data.csv
+        data.score_noise_std: 2.5
+    outs:
+    - path: data/raw/session_data.csv
+      hash: md5
+      md5: 7f26a960b344bbf539bf62f25238feac
+      size: 101469
+  prepare_data:
+    cmd: python -m src.prepare_data --params params.yaml
+    deps:
+    - path: data/raw/session_data.csv
+      hash: md5
+      md5: 7f26a960b344bbf539bf62f25238feac
+      size: 101469
+    - path: params.yaml
+      hash: md5
+      md5: 39e940ff6ba35188b567111463a3b617
+      size: 487
+    - path: src/config.py
+      hash: md5
+      md5: 0bf6489b32a1b3c8a5aba1b2fdc8b2cf
+      size: 495
+    - path: src/prepare_data.py
+      hash: md5
+      md5: aa68f81038e6d7b743852baed6a1e6b4
+      size: 2952
+    params:
+      params.yaml:
+        data.processed_test_path: data/processed/test.csv
+        data.processed_train_path: data/processed/train.csv
+        data.raw_path: data/raw/session_data.csv
+        split.random_state: 60
+        split.stratify: true
+        split.test_size: 0.25
+    outs:
+    - path: data/processed/test.csv
+      hash: md5
+      md5: 1135ea0687a417a714eadbf04e12579a
+      size: 54176
+    - path: data/processed/train.csv
+      hash: md5
+      md5: 824534065694bcd07ce110729ca4623c
+      size: 161749
+  train_model:
+    cmd: python -m src.train --params params.yaml
+    deps:
+    - path: data/processed/test.csv
+      hash: md5
+      md5: 1135ea0687a417a714eadbf04e12579a
+      size: 54176
+    - path: data/processed/train.csv
+      hash: md5
+      md5: 824534065694bcd07ce110729ca4623c
+      size: 161749
+    - path: params.yaml
+      hash: md5
+      md5: 39e940ff6ba35188b567111463a3b617
+      size: 487
+    - path: src/config.py
+      hash: md5
+      md5: 0bf6489b32a1b3c8a5aba1b2fdc8b2cf
+      size: 495
+    - path: src/train.py
+      hash: md5
+      md5: 19bb2fea521a7ff8f0a1563f12350c53
+      size: 6348
+    params:
+      params.yaml:
+        mlflow.experiment_name: engagement_level_classification
+        mlflow.tracking_uri: sqlite:///mlflow.db
+        model.class_weight: balanced
+        model.max_depth: 10
+        model.n_estimators: 200
+        model.random_state: 60
+        model.type: random_forest
+    outs:
+    - path: models/classification_model.joblib
+      hash: md5
+      md5: 28e0422c90b29add33f5343ff08792b9
+      size: 8741690
+    - path: reports/classification_report.txt
+      hash: md5
+      md5: 587847368d215f8bef54b2d8bdd4bfb3
+      size: 380
+    - path: reports/confusion_matrix.png
+      hash: md5
+      md5: 1a07125b8e936466ececcfef8a91f4cb
+      size: 29805
+    - path: reports/metrics.json
+      hash: md5
+      md5: 6a86801c337a890dc1747a0314679465
+      size: 135
+    - path: reports/predictions.csv
+      hash: md5
+      md5: c4dda4f6e274d348e0a63e54b15871f0
+      size: 5111
