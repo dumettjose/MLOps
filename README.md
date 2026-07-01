@@ -35,6 +35,24 @@ python -m poetry install
 
 Poetry crea el entorno virtual en `.venv/` (configurado en `poetry.toml`).
 
+## Comandos minimos esperados
+
+Bloque minimo de ejecucion requerido para el proyecto:
+
+```bash
+poetry install
+poetry run dvc pull
+poetry run dvc repro
+poetry run python -m src.train --params params.yaml
+poetry run mlflow ui --backend-store-uri sqlite:///mlflow.db
+```
+
+Notas:
+
+- `dvc pull` recupera datos versionados desde el remoto DVC (`./dvc_remote`). Si es la primera ejecucion y aun no hay datos en el remoto, continua con `dvc repro`.
+- El entrenamiento usa el modulo `src.train` porque el codigo esta organizado como paquete Python en `src/`.
+- Abre MLflow en http://127.0.0.1:5000
+
 Verifica la instalacion:
 
 ```bash
