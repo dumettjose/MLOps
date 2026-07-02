@@ -1,0 +1,65 @@
+schema: '2.0'
+stages:
+  generate_data:
+    cmd: python -m src.generate_data --params params.yaml
+    deps:
+    - path: params.yaml
+      hash: md5
+      md5: 611da5ae4e08e20a308cfb475c2fcf51
+      size: 282
+    - path: src/config.py
+      hash: md5
+      md5: 0bf6489b32a1b3c8a5aba1b2fdc8b2cf
+      size: 495
+    - path: src/generate_data.py
+      hash: md5
+      md5: d21e7c3e059f0e82b9cdbc37a5fd6abe
+      size: 5839
+    params:
+      params.yaml:
+        data.label_noise: 0.04
+        data.n_samples: 2000
+        data.random_state: 60
+        data.raw_path: data/raw/session_data.csv
+        data.score_noise_std: 2.5
+    outs:
+    - path: data/raw/session_data.csv
+      hash: md5
+      md5: 7f26a960b344bbf539bf62f25238feac
+      size: 101469
+  prepare_data:
+    cmd: python -m src.prepare_data --params params.yaml
+    deps:
+    - path: data/raw/session_data.csv
+      hash: md5
+      md5: 7f26a960b344bbf539bf62f25238feac
+      size: 101469
+    - path: params.yaml
+      hash: md5
+      md5: 611da5ae4e08e20a308cfb475c2fcf51
+      size: 282
+    - path: src/config.py
+      hash: md5
+      md5: 0bf6489b32a1b3c8a5aba1b2fdc8b2cf
+      size: 495
+    - path: src/prepare_data.py
+      hash: md5
+      md5: aa68f81038e6d7b743852baed6a1e6b4
+      size: 2952
+    params:
+      params.yaml:
+        data.processed_test_path: data/processed/test.csv
+        data.processed_train_path: data/processed/train.csv
+        data.raw_path: data/raw/session_data.csv
+        split.random_state: 60
+        split.stratify: true
+        split.test_size: 0.25
+    outs:
+    - path: data/processed/test.csv
+      hash: md5
+      md5: 1135ea0687a417a714eadbf04e12579a
+      size: 54176
+    - path: data/processed/train.csv
+      hash: md5
+      md5: 824534065694bcd07ce110729ca4623c
+      size: 161749

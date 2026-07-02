@@ -1,0 +1,13 @@
+data:
+  n_samples: 2000
+  random_state: 60
+  score_noise_std: 2.5
+  label_noise: 0.04
+  raw_path: data/raw/session_data.csv
+  processed_train_path: data/processed/train.csv
+  processed_test_path: data/processed/test.csv
+
+split:
+  test_size: 0.25
+  random_state: 60
+  stratify: true
