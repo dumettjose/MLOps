@@ -1,0 +1,351 @@
+{
+  "experiment_name": "engagement_level_classification",
+  "tracking_uri": "sqlite:///mlflow.db",
+  "total_runs": 14,
+  "runs": [
+    {
+      "run_id": "9cbdcdb1a2ae4989810b748aad83fc85",
+      "run_name": "logistic_regression",
+      "status": "FINISHED",
+      "start_time": 1782926687777,
+      "params": {
+        "model_type": "logistic_regression",
+        "n_estimators": "200",
+        "max_depth": "10",
+        "max_iter": "1000",
+        "learning_rate": "0.1",
+        "class_weight": "balanced",
+        "model_random_state": "60",
+        "data_random_state": "60",
+        "n_samples": "2000",
+        "test_size": "0.25",
+        "stratify": "True"
+      },
+      "metrics": {
+        "accuracy": 0.804,
+        "precision_macro": 0.7724183404341652,
+        "recall_macro": 0.8023308691651945,
+        "f1_macro": 0.7849608154934486
+      }
+    },
+    {
+      "run_id": "8b0a3023a0d2470180b04083255203f7",
+      "run_name": "random_forest",
+      "status": "FINISHED",
+      "start_time": 1782926684969,
+      "params": {
+        "model_type": "random_forest",
+        "n_estimators": "200",
+        "max_depth": "10",
+        "max_iter": "1000",
+        "learning_rate": "0.1",
+        "class_weight": "balanced",
+        "model_random_state": "60",
+        "data_random_state": "60",
+        "n_samples": "2000",
+        "test_size": "0.25",
+        "stratify": "True"
+      },
+      "metrics": {
+        "accuracy": 0.79,
+        "precision_macro": 0.7571971207229918,
+        "recall_macro": 0.7479433355170354,
+        "f1_macro": 0.7517148279744917
+      }
+    },
+    {
+      "run_id": "ea5fc4a2d8d4432a9036af3201c2e90b",
+      "run_name": "logistic_regression",
+      "status": "FINISHED",
+      "start_time": 1782926671973,
+      "params": {
+        "model_type": "logistic_regression",
+        "n_estimators": "200",
+        "max_depth": "10",
+        "max_iter": "1000",
+        "learning_rate": "0.1",
+        "class_weight": "balanced",
+        "model_random_state": "60",
+        "data_random_state": "60",
+        "n_samples": "2000",
+        "test_size": "0.25",
+        "stratify": "True"
+      },
+      "metrics": {
+        "accuracy": 0.804,
+        "precision_macro": 0.7724183404341652,
+        "recall_macro": 0.8023308691651945,
+        "f1_macro": 0.7849608154934486
+      }
+    },
+    {
+      "run_id": "a447693e58784a3083c87b1f4b397504",
+      "run_name": "logistic_regression",
+      "status": "FINISHED",
+      "start_time": 1782926670239,
+      "params": {
+        "model_type": "logistic_regression",
+        "n_estimators": "200",
+        "max_depth": "10",
+        "max_iter": "1000",
+        "learning_rate": "0.1",
+        "class_weight": "balanced",
+        "model_random_state": "60",
+        "data_random_state": "60",
+        "n_samples": "2000",
+        "test_size": "0.25",
+        "stratify": "True"
+      },
+      "metrics": {
+        "accuracy": 0.804,
+        "precision_macro": 0.7724183404341652,
+        "recall_macro": 0.8023308691651945,
+        "f1_macro": 0.7849608154934486
+      }
+    },
+    {
+      "run_id": "a948bc40ff634421bd0d55e5b9200eb4",
+      "run_name": "random_forest",
+      "status": "FINISHED",
+      "start_time": 1782926667165,
+      "params": {
+        "model_type": "random_forest",
+        "n_estimators": "200",
+        "max_depth": "10",
+        "max_iter": "1000",
+        "learning_rate": "0.1",
+        "class_weight": "balanced",
+        "model_random_state": "60",
+        "data_random_state": "60",
+        "n_samples": "2000",
+        "test_size": "0.25",
+        "stratify": "True"
+      },
+      "metrics": {
+        "accuracy": 0.79,
+        "precision_macro": 0.7571971207229918,
+        "recall_macro": 0.7479433355170354,
+        "f1_macro": 0.7517148279744917
+      }
+    },
+    {
+      "run_id": "cf186e9b5b444ba1bad9fa78a46d5f55",
+      "run_name": "random_forest",
+      "status": "FINISHED",
+      "start_time": 1782926270597,
+      "params": {
+        "model_type": "random_forest",
+        "n_estimators": "200",
+        "max_depth": "10",
+        "max_iter": "1000",
+        "learning_rate": "0.1",
+        "class_weight": "balanced",
+        "model_random_state": "60",
+        "data_random_state": "60",
+        "n_samples": "2000",
+        "test_size": "0.25",
+        "stratify": "True"
+      },
+      "metrics": {
+        "accuracy": 0.79,
+        "precision_macro": 0.7571971207229918,
+        "recall_macro": 0.7479433355170354,
+        "f1_macro": 0.7517148279744917
+      }
+    },
+    {
+      "run_id": "6aff2a392c7449b7b35fcc349ed23479",
+      "run_name": "random_forest",
+      "status": "FINISHED",
+      "start_time": 1782925144753,
+      "params": {
+        "model_type": "random_forest",
+        "n_estimators": "200",
+        "max_depth": "10",
+        "max_iter": "1000",
+        "learning_rate": "0.1",
+        "class_weight": "balanced",
+        "model_random_state": "60",
+        "data_random_state": "60",
+        "n_samples": "2000",
+        "test_size": "0.25",
+        "stratify": "True"
+      },
+      "metrics": {
+        "accuracy": 0.79,
+        "precision_macro": 0.7571971207229918,
+        "recall_macro": 0.7479433355170354,
+        "f1_macro": 0.7517148279744917
+      }
+    },
+    {
+      "run_id": "933bdcd6a603414a9e893da16713b1a9",
+      "run_name": "logistic_regression",
+      "status": "FINISHED",
+      "start_time": 1782925142933,
+      "params": {
+        "model_type": "logistic_regression",
+        "n_estimators": "200",
+        "max_depth": "10",
+        "max_iter": "1000",
+        "learning_rate": "0.1",
+        "class_weight": "balanced",
+        "model_random_state": "60",
+        "data_random_state": "60",
+        "n_samples": "2000",
+        "test_size": "0.25",
+        "stratify": "True"
+      },
+      "metrics": {
+        "accuracy": 0.804,
+        "precision_macro": 0.7724183404341652,
+        "recall_macro": 0.8023308691651945,
+        "f1_macro": 0.7849608154934486
+      }
+    },
+    {
+      "run_id": "844947a1959f4ba0b32c5c2bb82ff6d0",
+      "run_name": "random_forest",
+      "status": "FINISHED",
+      "start_time": 1782925140380,
+      "params": {
+        "model_type": "random_forest",
+        "n_estimators": "200",
+        "max_depth": "10",
+        "max_iter": "1000",
+        "learning_rate": "0.1",
+        "class_weight": "balanced",
+        "model_random_state": "60",
+        "data_random_state": "60",
+        "n_samples": "2000",
+        "test_size": "0.25",
+        "stratify": "True"
+      },
+      "metrics": {
+        "accuracy": 0.79,
+        "precision_macro": 0.7571971207229918,
+        "recall_macro": 0.7479433355170354,
+        "f1_macro": 0.7517148279744917
+      }
+    },
+    {
+      "run_id": "99e67274fbc34768ac05e87672fdbfa3",
+      "run_name": "random_forest",
+      "status": "FINISHED",
+      "start_time": 1782925135056,
+      "params": {
+        "model_type": "random_forest",
+        "n_estimators": "200",
+        "max_depth": "10",
+        "max_iter": "1000",
+        "learning_rate": "0.1",
+        "class_weight": "balanced",
+        "model_random_state": "60",
+        "data_random_state": "60",
+        "n_samples": "2000",
+        "test_size": "0.25",
+        "stratify": "True"
+      },
+      "metrics": {
+        "accuracy": 0.79,
+        "precision_macro": 0.7571971207229918,
+        "recall_macro": 0.7479433355170354,
+        "f1_macro": 0.7517148279744917
+      }
+    },
+    {
+      "run_id": "cf3b7033e056460bac97689e45a40775",
+      "run_name": "logistic_regression",
+      "status": "FINISHED",
+      "start_time": 1782924950168,
+      "params": {
+        "model_type": "logistic_regression",
+        "n_estimators": "200",
+        "max_depth": "10",
+        "max_iter": "1000",
+        "learning_rate": "0.1",
+        "class_weight": "balanced",
+        "model_random_state": "60",
+        "data_random_state": "60",
+        "n_samples": "2000",
+        "test_size": "0.25",
+        "stratify": "True"
+      },
+      "metrics": {
+        "accuracy": 0.804,
+        "precision_macro": 0.7724183404341652,
+        "recall_macro": 0.8023308691651945,
+        "f1_macro": 0.7849608154934486
+      }
+    },
+    {
+      "run_id": "ccdf94a8082d496882780f4d82d37007",
+      "run_name": "random_forest",
+      "status": "FINISHED",
+      "start_time": 1782924550696,
+      "params": {
+        "model_type": "random_forest",
+        "n_estimators": "200",
+        "max_depth": "10",
+        "class_weight": "balanced",
+        "model_random_state": "60",
+        "data_random_state": "60",
+        "n_samples": "2000",
+        "test_size": "0.25",
+        "stratify": "True"
+      },
+      "metrics": {
+        "accuracy": 0.79,
+        "precision_macro": 0.7571971207229918,
+        "recall_macro": 0.7479433355170354,
+        "f1_macro": 0.7517148279744917
+      }
+    },
+    {
+      "run_id": "8136f4d3df3b4eb3a69ddfe027a05aae",
+      "run_name": "random_forest",
+      "status": "FINISHED",
+      "start_time": 1782918504612,
+      "params": {
+        "model_type": "random_forest",
+        "n_estimators": "200",
+        "max_depth": "10",
+        "class_weight": "balanced",
+        "model_random_state": "60",
+        "data_random_state": "60",
+        "n_samples": "2000",
+        "test_size": "0.25",
+        "stratify": "True"
+      },
+      "metrics": {
+        "accuracy": 0.79,
+        "precision_macro": 0.7571971207229918,
+        "recall_macro": 0.7479433355170354,
+        "f1_macro": 0.7517148279744917
+      }
+    },
+    {
+      "run_id": "e137dbe1bd66402ea199e7f17a1dc2c6",
+      "run_name": "random_forest",
+      "status": "FINISHED",
+      "start_time": 1782918481252,
+      "params": {
+        "model_type": "random_forest",
+        "n_estimators": "200",
+        "max_depth": "10",
+        "class_weight": "balanced",
+        "model_random_state": "60",
+        "data_random_state": "60",
+        "n_samples": "2000",
+        "test_size": "0.25",
+        "stratify": "True"
+      },
+      "metrics": {
+        "accuracy": 0.79,
+        "precision_macro": 0.7571971207229918,
+        "recall_macro": 0.7479433355170354,
+        "f1_macro": 0.7517148279744917
+      }
+    }
+  ]
+}

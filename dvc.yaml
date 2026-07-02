@@ -31,3 +31,31 @@ stages:
     outs:
       - data/processed/train.csv
       - data/processed/test.csv
+
+  train_model:
+    cmd: python -m src.train_all --params params.yaml
+    deps:
+      - src/train.py
+      - src/train_all.py
+      - src/export_mlflow_evidence.py
+      - src/config.py
+      - data/processed/train.csv
+      - data/processed/test.csv
+      - params.yaml
+    params:
+      - model.random_state
+      - model.n_estimators
+      - model.max_depth
+      - model.max_iter
+      - model.learning_rate
+      - model.class_weight
+      - mlflow.tracking_uri
+      - mlflow.experiment_name
+    outs:
+      - models/classification_model.joblib
+      - reports/predictions.csv
+      - reports/confusion_matrix.png
+      - reports/classification_report.txt
+    metrics:
+      - reports/metrics.json:
+          cache: false

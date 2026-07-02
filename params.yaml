@@ -11,3 +11,16 @@ split:
   test_size: 0.25
   random_state: 60
   stratify: true
+
+model:
+  # Hiperparametros compartidos por los 3 modelos (el pipeline entrena todos automaticamente).
+  random_state: 60
+  n_estimators: 200
+  max_depth: 10
+  max_iter: 1000
+  learning_rate: 0.1
+  class_weight: balanced
+
+mlflow:
+  tracking_uri: sqlite:///mlflow.db
+  experiment_name: engagement_level_classification
