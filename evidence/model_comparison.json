@@ -11,9 +11,13 @@
       "precision_macro": 0.7724183404341652,
       "recall_macro": 0.8023308691651945,
       "f1_macro": 0.7849608154934486
+    },
+    "lightgbm": {
+      "accuracy": 0.792,
+      "precision_macro": 0.7652636735245432,
+      "recall_macro": 0.7462590905656823,
+      "f1_macro": 0.7546020036113572
     }
   },
-  "errors": {
-    "lightgbm": "No se pudo entrenar lightgbm. En macOS instala libomp: brew install libomp"
-  }
+  "errors": {}
 }

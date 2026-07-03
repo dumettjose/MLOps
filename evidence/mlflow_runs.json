@@ -1,8 +1,108 @@
 {
   "experiment_name": "engagement_level_classification",
   "tracking_uri": "sqlite:///mlflow.db",
-  "total_runs": 14,
+  "total_runs": 18,
   "runs": [
+    {
+      "run_id": "22981449a8fc47bda26cc384041b0e33",
+      "run_name": "lightgbm",
+      "status": "FINISHED",
+      "start_time": 1783040254315,
+      "params": {
+        "model_type": "lightgbm",
+        "n_estimators": "200",
+        "max_depth": "10",
+        "max_iter": "1000",
+        "learning_rate": "0.1",
+        "class_weight": "balanced",
+        "model_random_state": "60",
+        "data_random_state": "60",
+        "n_samples": "2000",
+        "test_size": "0.25",
+        "stratify": "True"
+      },
+      "metrics": {
+        "accuracy": 0.792,
+        "precision_macro": 0.7652636735245432,
+        "recall_macro": 0.7462590905656823,
+        "f1_macro": 0.7546020036113572
+      }
+    },
+    {
+      "run_id": "c65301deaa104d19a51b54325cc8acc4",
+      "run_name": "logistic_regression",
+      "status": "FINISHED",
+      "start_time": 1783040252596,
+      "params": {
+        "model_type": "logistic_regression",
+        "n_estimators": "200",
+        "max_depth": "10",
+        "max_iter": "1000",
+        "learning_rate": "0.1",
+        "class_weight": "balanced",
+        "model_random_state": "60",
+        "data_random_state": "60",
+        "n_samples": "2000",
+        "test_size": "0.25",
+        "stratify": "True"
+      },
+      "metrics": {
+        "accuracy": 0.804,
+        "precision_macro": 0.7724183404341652,
+        "recall_macro": 0.8023308691651945,
+        "f1_macro": 0.7849608154934486
+      }
+    },
+    {
+      "run_id": "feb0c1fde33e4548a65355e1d907b95f",
+      "run_name": "random_forest",
+      "status": "FINISHED",
+      "start_time": 1783040249535,
+      "params": {
+        "model_type": "random_forest",
+        "n_estimators": "200",
+        "max_depth": "10",
+        "max_iter": "1000",
+        "learning_rate": "0.1",
+        "class_weight": "balanced",
+        "model_random_state": "60",
+        "data_random_state": "60",
+        "n_samples": "2000",
+        "test_size": "0.25",
+        "stratify": "True"
+      },
+      "metrics": {
+        "accuracy": 0.79,
+        "precision_macro": 0.7571971207229918,
+        "recall_macro": 0.7479433355170354,
+        "f1_macro": 0.7517148279744917
+      }
+    },
+    {
+      "run_id": "eebd3261587447c4b4093049cb1f68a0",
+      "run_name": "logistic_regression",
+      "status": "FINISHED",
+      "start_time": 1782926689451,
+      "params": {
+        "model_type": "logistic_regression",
+        "n_estimators": "200",
+        "max_depth": "10",
+        "max_iter": "1000",
+        "learning_rate": "0.1",
+        "class_weight": "balanced",
+        "model_random_state": "60",
+        "data_random_state": "60",
+        "n_samples": "2000",
+        "test_size": "0.25",
+        "stratify": "True"
+      },
+      "metrics": {
+        "accuracy": 0.804,
+        "precision_macro": 0.7724183404341652,
+        "recall_macro": 0.8023308691651945,
+        "f1_macro": 0.7849608154934486
+      }
+    },
     {
       "run_id": "9cbdcdb1a2ae4989810b748aad83fc85",
       "run_name": "logistic_regression",
