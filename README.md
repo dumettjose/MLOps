@@ -8,38 +8,100 @@ Ver `integrantes.md` para nombres, roles y responsabilidades.
 
 ## Requisitos
 
-- Python `>=3.14`
-- [Poetry](https://python-poetry.org/)
-- Git
+| Herramienta | Version / notas |
+|-------------|-----------------|
+| Python | `>=3.14` ([python.org](https://www.python.org/downloads/)) |
+| [Poetry](https://python-poetry.org/docs/#installation) | Gestor de dependencias |
+| Git | Control de versiones |
+| Homebrew (solo macOS) | Necesario para LightGBM (`libomp`) |
 
-Opcional en macOS para LightGBM:
+## Guia de ejecucion desde cero
+
+Sigue estos pasos en orden desde una PC nueva (macOS, Linux o Windows con WSL).
+
+### 1. Clonar el repositorio
 
 ```bash
-brew install libomp
-```
-
-## Instalacion
-
-Clona el repositorio y entra a la carpeta del proyecto:
-
-```bash
-git clone https://github.com/dumettjose/MLOps.git
+git clone https://github.com/Sergiogarcialeo/MLOps.git
 cd MLOps
 ```
 
-Crea el entorno e instala dependencias:
+### 2. Instalar dependencias con Poetry
 
 ```bash
-python -m poetry install
+poetry install
 ```
 
 Poetry crea el entorno virtual en `.venv/` (configurado en `poetry.toml`).
 
-En **Python 3.14**, MLflow 3.14.0 tiene un bug conocido con la UI. Aplica el parche una vez tras `poetry install`:
+### 3. macOS — instalar LightGBM (obligatorio en Mac)
+
+LightGBM requiere OpenMP. Sin esto, los otros dos modelos entrenan pero `lightgbm` falla.
+
+```bash
+# Si no tienes Homebrew: https://brew.sh
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Activar brew en Apple Silicon (solo la primera vez)
+echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+brew install libomp
+```
+
+Verifica:
+
+```bash
+poetry run python -c "import lightgbm; print('LightGBM OK')"
+```
+
+En **Linux**, LightGBM suele funcionar sin pasos extra. En **Windows**, instala [Visual C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) o usa WSL.
+
+### 4. Parche MLflow para Python 3.14 (obligatorio)
+
+MLflow 3.14.0 no arranca la UI en Python 3.14 sin este parche. Ejecutalo **una vez** despues de cada `poetry install`:
 
 ```bash
 poetry run python scripts/patch_mlflow_py314.py
 ```
+
+Es seguro ejecutarlo varias veces: el script es idempotente.
+
+### 5. Ejecutar el pipeline completo
+
+```bash
+poetry run dvc pull
+poetry run dvc repro
+```
+
+- `dvc pull` descarga datos del remoto DVC si existe (`./dvc_remote`). Si falla o es la primera vez, continua con `dvc repro`.
+- `dvc repro` ejecuta las 3 etapas: generacion de datos, preparacion y entrenamiento de **los 3 modelos**.
+
+Para forzar solo el reentrenamiento de modelos:
+
+```bash
+poetry run dvc repro -f train_model
+```
+
+### 6. Verificar resultados
+
+```bash
+poetry run pytest
+cat evidence/model_comparison.json
+```
+
+Debes ver metricas de `random_forest`, `logistic_regression` y `lightgbm` sin errores en `"errors"`.
+
+### 7. Abrir MLflow UI
+
+```bash
+poetry run python scripts/patch_mlflow_py314.py
+poetry run mlflow ui --backend-store-uri sqlite:///mlflow.db
+```
+
+Abre http://127.0.0.1:5000 en el navegador. Para detener el servidor: `Ctrl+C`.
+
+**Importante:** deja un espacio entre `--backend-store-uri` y `sqlite:///mlflow.db`.
 
 ## Comandos minimos esperados
 
@@ -64,9 +126,20 @@ Notas:
 Verifica la instalacion:
 
 ```bash
-python -m poetry run python -c "import src.train; print('ok')"
-python -m poetry run pytest
+poetry run python -c "import src.train; print('ok')"
+poetry run pytest
 ```
+
+## Solucion de problemas
+
+| Problema | Solucion |
+|----------|----------|
+| `Library not loaded: libomp.dylib` | `brew install libomp` (macOS) |
+| `ImportError: Traversable` al abrir MLflow | `poetry run python scripts/patch_mlflow_py314.py` |
+| `IndentationError` en skill_installer | Ejecuta el parche de nuevo (restaura MLflow automaticamente) |
+| `--backend-store-urisqlite://...` | Falta espacio: `--backend-store-uri sqlite:///mlflow.db` |
+| LightGBM test skipped en pytest | Normal en Mac sin libomp; instala libomp y vuelve a correr |
+| `dvc pull` sin remoto configurado | Ignora y usa `dvc repro` directamente |
 
 ## Estructura del proyecto
 
@@ -84,6 +157,8 @@ MLOps/
 ├── pyproject.toml
 ├── poetry.lock
 ├── poetry.toml
+├── scripts/
+│   └── patch_mlflow_py314.py # Parche MLflow para Python 3.14
 ├── evidence/                 # Evidencias versionadas en Git
 ├── Datos.md
 ├── Modelos.md
@@ -95,13 +170,13 @@ MLOps/
 Inicializa DVC si aun no existe:
 
 ```bash
-python -m poetry run dvc init --subdir
+poetry run dvc init --subdir
 ```
 
 Ejecuta las 3 etapas:
 
 ```bash
-python -m poetry run dvc repro
+poetry run dvc repro
 ```
 
 Etapas:
@@ -140,13 +215,13 @@ Evidencias generadas en `evidence/`:
 Si quieres repetir solo la etapa de modelos sin DVC:
 
 ```bash
-python -m poetry run python -m src.train_all --params params.yaml
+poetry run python -m src.train_all --params params.yaml
 ```
 
 ### Depurar un solo modelo
 
 ```bash
-python -m poetry run python -m src.train --params params.yaml
+poetry run python -m src.train --params params.yaml
 ```
 
 En ese caso define temporalmente `model.type` en `params.yaml` (`random_forest`, `logistic_regression` o `lightgbm`).
@@ -172,7 +247,7 @@ Si bajaste MLflow a una version anterior y la base ya fue creada con 3.14, migra
 Para exportar evidencias versionables en Git:
 
 ```bash
-python -m poetry run python -m src.export_mlflow_evidence --params params.yaml
+poetry run python -m src.export_mlflow_evidence --params params.yaml
 ```
 
 ## Metricas evaluadas
@@ -221,5 +296,5 @@ mlflow.db
 ## Pruebas
 
 ```bash
-python -m poetry run pytest
+poetry run pytest
 ```
