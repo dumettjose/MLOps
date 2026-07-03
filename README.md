@@ -35,12 +35,19 @@ python -m poetry install
 
 Poetry crea el entorno virtual en `.venv/` (configurado en `poetry.toml`).
 
+En **Python 3.14**, MLflow 3.14.0 tiene un bug conocido con la UI. Aplica el parche una vez tras `poetry install`:
+
+```bash
+poetry run python scripts/patch_mlflow_py314.py
+```
+
 ## Comandos minimos esperados
 
 Bloque minimo de ejecucion requerido para el proyecto:
 
 ```bash
 poetry install
+poetry run python scripts/patch_mlflow_py314.py
 poetry run dvc pull
 poetry run dvc repro
 poetry run python -m src.train --params params.yaml
@@ -146,13 +153,21 @@ En ese caso define temporalmente `model.type` en `params.yaml` (`random_forest`,
 
 ## MLflow
 
-Levanta la interfaz local:
+Levanta la interfaz local (nota el espacio entre `--backend-store-uri` y `sqlite:///`):
 
 ```bash
-python -m poetry run mlflow ui --backend-store-uri sqlite:///mlflow.db
+poetry run mlflow ui --backend-store-uri sqlite:///mlflow.db
 ```
 
 Abre http://127.0.0.1:5000
+
+Si ves `ImportError: cannot import name 'Traversable' from 'importlib.abc'`, ejecuta el parche de Python 3.14:
+
+```bash
+poetry run python scripts/patch_mlflow_py314.py
+```
+
+Si bajaste MLflow a una version anterior y la base ya fue creada con 3.14, migra el esquema o regenera `mlflow.db` con `dvc repro`.
 
 Para exportar evidencias versionables en Git:
 
