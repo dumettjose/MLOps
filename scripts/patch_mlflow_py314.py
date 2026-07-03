@@ -2,21 +2,66 @@
 
 from __future__ import annotations
 
+import subprocess
 import sys
 from pathlib import Path
 
-
-def patch_skill_installer(skill_installer: Path) -> bool:
-    text = skill_installer.read_text(encoding="utf-8")
-    old = "from importlib.abc import Traversable"
-    new = """try:
+PATCH_MARKER = "from importlib.resources.abc import Traversable"
+ORIGINAL_IMPORT = "from importlib.abc import Traversable"
+PATCHED_IMPORT = """try:
     from importlib.resources.abc import Traversable
 except ImportError:
     from importlib.abc import Traversable"""
-    if old not in text:
+
+
+def _is_valid_python(source: str) -> bool:
+    try:
+        compile(source, "skill_installer.py", "exec")
+        return True
+    except SyntaxError:
         return False
-    skill_installer.write_text(text.replace(old, new, 1), encoding="utf-8")
-    return True
+
+
+def _restore_mlflow_package() -> None:
+    import mlflow
+
+    subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "pip",
+            "install",
+            "--force-reinstall",
+            "--no-deps",
+            f"mlflow=={mlflow.__version__}",
+        ],
+        check=True,
+    )
+
+
+def patch_skill_installer(skill_installer: Path) -> str:
+    text = skill_installer.read_text(encoding="utf-8")
+
+    if PATCH_MARKER in text and _is_valid_python(text):
+        return "already_ok"
+
+    if PATCH_MARKER in text and not _is_valid_python(text):
+        _restore_mlflow_package()
+        text = skill_installer.read_text(encoding="utf-8")
+
+    if ORIGINAL_IMPORT not in text:
+        if PATCH_MARKER in text and _is_valid_python(text):
+            return "already_ok"
+        raise RuntimeError(
+            f"Unexpected {skill_installer.name} content; expected {ORIGINAL_IMPORT!r}."
+        )
+
+    patched = text.replace(ORIGINAL_IMPORT, PATCHED_IMPORT, 1)
+    if not _is_valid_python(patched):
+        raise RuntimeError(f"Patch would produce invalid Python in {skill_installer}.")
+
+    skill_installer.write_text(patched, encoding="utf-8")
+    return "patched"
 
 
 def main() -> int:
@@ -35,10 +80,16 @@ def main() -> int:
         print(f"File not found: {skill_installer}")
         return 1
 
-    if patch_skill_installer(skill_installer):
+    try:
+        result = patch_skill_installer(skill_installer)
+    except RuntimeError as exc:
+        print(exc)
+        return 1
+
+    if result == "patched":
         print(f"Patched {skill_installer}")
     else:
-        print("Patch already applied or MLflow version uses a different import.")
+        print("Patch already applied.")
 
     return 0
 
